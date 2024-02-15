@@ -1,16 +1,21 @@
-import express from "express";
-import {
+// Requiring the express module
+const express = require("express");
+
+// Creating an instance of Express router
+const router = express.Router();
+
+// Requiring the controllers and middleware
+const {
   getAllBlogs,
   createBlog,
   getBlogByAuthorId,
-} from "../controllers/blogController.js";
-import { validateAuthorId } from "../middleware/authMiddleware.js";
+} = require("../controllers/blogController");
+const { validateAuthorId } = require("../middleware/authMiddleware");
 
-const router = express.Router();
+// Defining routes
+router.get("/", getAllBlogs); // Route to get all blogs
+router.post("/", createBlog); // Route to create a new blog
+router.get("/:authorId", validateAuthorId, getBlogByAuthorId); // Route to get blogs by author ID
 
-router.get("/", getAllBlogs);
-router.post("/", createBlog);
-router.get("/:authorId", validateAuthorId, getBlogByAuthorId);
-
-// Export the router
-export { router as blogRouter };
+// Exporting the router
+module.exports = router;

@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": 1,
+    "username": "Tejas Nayak B",
+    "password": "$2b$10$iBtUtBHXMZ7OLJQBW0wI1.yDv1yr56Q9LK4udgF.ZOcmOXqTUwKnK"
+  },
+  {
+    "id": 2,
+    "username": "Tejas",
+    "password": "$2b$10$9NC7VNpuXV2SFd88uIvdZ.8YXicE1m6tR7/zf0iOUe.BUn8T47zru"
+  }
+]
