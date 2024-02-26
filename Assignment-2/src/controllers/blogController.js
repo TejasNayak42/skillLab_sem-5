@@ -65,3 +65,16 @@ export const deleteBlog = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Controller function to search for blogs by title
+export const searchBlogs = async (req, res) => {
+  try {
+    const query = req.params.query;
+    // Perform a search query to find blog posts with titles matching the entered query
+    const regex = new RegExp(query, "i"); // Case-insensitive search
+    const blogs = await BlogModel.find({ title: regex });
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

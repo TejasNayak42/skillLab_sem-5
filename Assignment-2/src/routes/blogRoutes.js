@@ -4,6 +4,7 @@ import {
   getAllBlogs,
   getBlogById,
   deleteBlog,
+  searchBlogs,
 } from "../controllers/blogController.js";
 import { verifyToken } from "../middlewares/middleWareJWT.js";
 
@@ -20,5 +21,8 @@ router.get("/:id", verifyToken, getBlogById);
 
 // Delete a blog by ID
 router.delete("/:id", verifyToken, deleteBlog);
+
+// Search for blogs by title
+router.get("/search/:query", verifyToken, searchBlogs);
 
 export { router as blogRouter };
