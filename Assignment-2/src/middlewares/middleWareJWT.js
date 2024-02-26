@@ -8,11 +8,17 @@ export const verifyToken = (req, res, next) => {
 
   if (token) {
     // Verify the token using the "secret" key
-    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
         console.error("Token Verification Error:", err);
         return res.sendStatus(403); // Token verification failed
       }
+
+      // Extract user role and ID from the decoded token
+      const { id, role } = decodedToken;
+
+      // Attach user role and ID to the request object for later use
+      req.user = { id, role };
 
       // Token is valid, proceed to the next middleware or route
       next();

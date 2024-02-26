@@ -50,19 +50,27 @@ export const getBlogById = async (req, res) => {
   }
 };
 
-// Controller function to delete a blog by ID
 export const deleteBlog = async (req, res) => {
+  const { id, role } = req.params;
+
   try {
-    const { id } = req.params;
+    // Check if the user is admin
+    if (role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "You do not have permission to delete blogs" });
+    }
+
     const deletedBlog = await BlogModel.findByIdAndDelete(id);
     if (!deletedBlog) {
       return res.status(404).json({ message: "Blog not found" });
     }
+
     res
       .status(200)
       .json({ message: "Blog deleted successfully", data: deletedBlog });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Error deleting blog" });
   }
 };
 

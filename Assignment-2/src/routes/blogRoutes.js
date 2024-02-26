@@ -20,7 +20,7 @@ router.get("/", verifyToken, getAllBlogs);
 router.get("/:id", verifyToken, getBlogById);
 
 // Delete a blog by ID
-router.delete("/:id", verifyToken, deleteBlog);
+router.delete("/:id/:role", verifyToken, deleteBlog);
 
 // Search for blogs by title
 router.get("/search/:query", verifyToken, searchBlogs);

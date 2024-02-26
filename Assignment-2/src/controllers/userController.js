@@ -59,8 +59,14 @@ export const loginUser = async (req, res) => {
       .json({ message: "Username or password is incorrect!" });
   }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  res.json({ token, userID: user._id });
+  // Set user role based on some condition
+  const userRole = user.isAdmin ? "admin" : "user";
+
+  const token = jwt.sign(
+    { id: user._id, role: userRole },
+    process.env.JWT_SECRET
+  );
+  res.json({ token, userID: user._id, userRole });
 };
 
 export const deleteUser = async (req, res) => {
@@ -77,16 +83,16 @@ export const deleteUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     // Check if the data is cached
-    const cachedData = await cacheGet(req.originalUrl);
-    if (cachedData) {
-      return res.status(200).json(cachedData); // Return cached data if found
-    }
+    // const cachedData = await cacheGet(req.originalUrl);
+    // if (cachedData) {
+    //   return res.status(200).json(cachedData); // Return cached data if found
+    // }
 
     // If data is not cached, query the database
     const users = await UserModel.find();
 
-    // Cache the retrieved data
-    await cacheSet(req.originalUrl, users);
+    // // Cache the retrieved data
+    // await cacheSet(req.originalUrl, users);
 
     res.status(200).json(users);
   } catch (error) {
