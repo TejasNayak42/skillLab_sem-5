@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/Users.js";
+import { cacheGet, cacheSet } from "../middlewares/cacheMiddleWare.js";
 
 export const registerUser = async (req, res) => {
   const { username, password } = req.body;
@@ -75,7 +76,18 @@ export const deleteUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
+    // Check if the data is cached
+    const cachedData = await cacheGet(req.originalUrl);
+    if (cachedData) {
+      return res.status(200).json(cachedData); // Return cached data if found
+    }
+
+    // If data is not cached, query the database
     const users = await UserModel.find();
+
+    // Cache the retrieved data
+    await cacheSet(req.originalUrl, users);
+
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "Error retrieving users" });

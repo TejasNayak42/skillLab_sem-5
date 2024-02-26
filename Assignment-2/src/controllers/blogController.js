@@ -1,3 +1,4 @@
+import { cacheGet, cacheSet } from "../middlewares/cacheMiddleWare.js";
 import { BlogModel } from "../models/Blog.js";
 
 // Controller function to create a new blog
@@ -17,7 +18,18 @@ export const createBlog = async (req, res) => {
 // Controller function to retrieve all blogs
 export const getAllBlogs = async (req, res) => {
   try {
+    // Check if the data is cached
+    const cachedData = await cacheGet(req.originalUrl);
+    if (cachedData) {
+      return res.status(200).json(cachedData); // Return cached data if found
+    }
+
+    // If data is not cached, query the database
     const blogs = await BlogModel.find();
+
+    // Cache the retrieved data
+    await cacheSet(req.originalUrl, blogs);
+
     res.status(200).json(blogs);
   } catch (error) {
     res.status(500).json({ error: error.message });
